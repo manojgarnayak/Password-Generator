@@ -1,6 +1,5 @@
 const inputSlider = document.querySelector("[data-lengthSlider]");
 const lengthDisplay = document.querySelector("[data-lengthNumber]");
-
 const passwordDisplay = document.querySelector("[data-passwordDisplay]");
 const copyBtn = document.querySelector("[data-copy]");
 const copyMsg = document.querySelector("[data-copyMsg]");
@@ -19,19 +18,22 @@ let password = "";
 let passwordLength = 10;
 let checkCount = 0;
 handleSlider();
-//ste strength circle color to grey
+//set strength circle color to grey
+setIndicator("#ccc");
 
 
 //set passwordLength
 function handleSlider() {
     inputSlider.value = passwordLength;
     lengthDisplay.innerText = passwordLength;
-    //or kuch bhi karna chahiye ? - HW
+    const min = inputSlider.min;
+    const max = inputSlider.max;
+    inputSlider.style.backgroundSize = ( (passwordLength - min)*100/(max - min)) + "% 100%"
 }
 
 function setIndicator(color) {
     indicator.style.backgroundColor = color;
-    //shadow - HW
+    indicator.style.boxShadow = `0px 0px 12px 1px ${color}`;
 }
 
 function getRndInteger(min, max) {
@@ -86,7 +88,7 @@ async function copyContent() {
     catch(e) {
         copyMsg.innerText = "Failed";
     }
-    //to make copy wala span visible
+    //to makespan visible
     copyMsg.classList.add("active");
 
     setTimeout( () => {
@@ -98,7 +100,9 @@ async function copyContent() {
 function shufflePassword(array) {
     //Fisher Yates Method
     for (let i = array.length - 1; i > 0; i--) {
+        //random J, find out using random function
         const j = Math.floor(Math.random() * (i + 1));
+        //swap number at i index and j index
         const temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -149,27 +153,8 @@ generateBtn.addEventListener('click', () => {
         handleSlider();
     }
 
-    // let's start the jouney to find new password
     //remove old password
     password = "";
-
-    //let's put the stuff mentioned by checkboxes
-
-    // if(uppercaseCheck.checked) {
-    //     password += generateUpperCase();
-    // }
-
-    // if(lowercaseCheck.checked) {
-    //     password += generateLowerCase();
-    // }
-
-    // if(numbersCheck.checked) {
-    //     password += generateRandomNumber();
-    // }
-
-    // if(symbolsCheck.checked) {
-    //     password += generateSymbol();
-    // }
 
     let funcArr = [];
 
@@ -193,6 +178,7 @@ generateBtn.addEventListener('click', () => {
     //remaining adddition
     for(let i=0; i<passwordLength-funcArr.length; i++) {
         let randIndex = getRndInteger(0 , funcArr.length);
+        console.log("randIndex" + randIndex);
         password += funcArr[randIndex]();
     }
     //shuffle the password
